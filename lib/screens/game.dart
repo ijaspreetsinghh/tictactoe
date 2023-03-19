@@ -50,108 +50,107 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MainColor.primaryColor,
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: 100,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Player O',
-                        style: whiteFontStyle,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Player O',
+                            style: whiteFontStyle,
+                          ),
+                          Obx(
+                            () => Text(
+                              oScore.value.toString(),
+                              style: whiteFontStyle,
+                            ),
+                          ),
+                        ],
                       ),
-                      Obx(
-                        () => Text(
-                          oScore.value.toString(),
-                          style: whiteFontStyle,
-                        ),
+                      const SizedBox(
+                        width: 24,
                       ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Player X',
+                            style: whiteFontStyle,
+                          ),
+                          Obx(
+                            () => Text(
+                              xScore.value.toString(),
+                              style: whiteFontStyle,
+                            ),
+                          ),
+                        ],
+                      )
                     ],
-                  ),
-                  const SizedBox(
-                    width: 24,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Player X',
-                        style: whiteFontStyle,
-                      ),
-                      Obx(
-                        () => Text(
-                          xScore.value.toString(),
-                          style: whiteFontStyle,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  _tapped(index);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        15,
-                      ),
-                      border: Border.all(
-                        color: MainColor.primaryColor,
-                        width: 5,
-                      ),
-                      color: matchedIndexes.contains(index)
-                          ? MainColor.accentColor
-                          : MainColor.secondaryColor),
-                  child: Center(
-                    child: Obx(() => Text(
-                          displayXO[index],
-                          style: coinyFont.copyWith(
-                              color: MainColor.primaryColor, fontSize: 64),
-                        )),
                   ),
                 ),
-              ),
-              itemCount: 9,
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Obx(
-                    () => Text(
-                      resultDeclaration.value,
-                      style: whiteFontStyle,
+                GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      _tapped(index);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            15,
+                          ),
+                          border: Border.all(
+                            color: MainColor.primaryColor,
+                            width: 5,
+                          ),
+                          color: matchedIndexes.contains(index)
+                              ? MainColor.accentColor
+                              : MainColor.secondaryColor),
+                      child: Center(
+                        child: Obx(() => Text(
+                              displayXO[index],
+                              style: coinyFont.copyWith(
+                                  color: MainColor.primaryColor, fontSize: 64),
+                            )),
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
+                  itemCount: 9,
+                ),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Obx(
+                        () => Text(
+                          resultDeclaration.value,
+                          style: whiteFontStyle,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      _buildTimer(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   ),
-                  _buildTimer(),
-                ],
-              ),
-            ),
-          ),
-        ]),
+                ),
+              ]),
+        ),
       ),
     );
   }
@@ -209,8 +208,8 @@ class _GameScreenState extends State<GameScreen> {
 
     return isRunning
         ? SizedBox(
-            width: 100,
-            height: 100,
+            width: 70,
+            height: 70,
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -218,7 +217,7 @@ class _GameScreenState extends State<GameScreen> {
                   () => CircularProgressIndicator(
                     value: 1 - seconds.value / GameScreen.maxSeconds,
                     valueColor: const AlwaysStoppedAnimation(Colors.white),
-                    strokeWidth: 8,
+                    strokeWidth: 6,
                     backgroundColor: MainColor.accentColor,
                   ),
                 ),
@@ -227,7 +226,7 @@ class _GameScreenState extends State<GameScreen> {
                     child: Text(
                       seconds.value.toString(),
                       style: const TextStyle(
-                        fontSize: 50,
+                        fontSize: 36,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
@@ -245,7 +244,8 @@ class _GameScreenState extends State<GameScreen> {
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16)),
             child: Text(
               attempts.value == 0 ? 'Start' : 'Play Again!',
               style: coinyFont.copyWith(
